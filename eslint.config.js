@@ -32,7 +32,7 @@ module.exports = [
       'indent': ['error', 2],
       'quotes': ['error', 'single'],
       'semi': ['error', 'always'],
-      'comma-dangle': ['error', 'always-multiline'],
+      'comma-dangle': ['error', 'only-multiline'],
       'object-curly-spacing': ['error', 'always'],
       'array-bracket-spacing': ['error', 'never'],
       

@@ -130,7 +130,7 @@ class DatabaseService {
     try {
       const client = await this.pool.connect();
       const result = await client.query(
-        'SELECT COUNT(*) as user_count FROM users',
+        'SELECT COUNT(*) as user_count FROM users'
       );
       client.release();
 

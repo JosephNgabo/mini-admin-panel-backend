@@ -41,7 +41,9 @@ jobs:
 
       - name: 🔧 Setup Test Database
         run: |
-          createdb -U postgres -h localhost mini_admin_panel_test
+          # Ensure clean test database
+          psql -U postgres -h localhost -c "DROP DATABASE IF EXISTS mini_admin_panel_test;" || true
+          psql -U postgres -h localhost -c "CREATE DATABASE mini_admin_panel_test;"
         env:
           PGPASSWORD: postgres
 

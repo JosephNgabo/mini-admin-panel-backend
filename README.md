@@ -1,2 +1,2 @@
-# qt-mini-admin
-Backend for Mini Admin Panel Challenge (Node.js + Express + PostgreSQL + Protobuf + Crypto)
+# mini-admin-panel-backend
+Backend for mini-admin-panel-backend (Node.js + Express + PostgreSQL + Protobuf + Crypto)

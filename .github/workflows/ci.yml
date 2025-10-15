@@ -1,4 +1,4 @@
-name: 🚀 CI/CD Pipeline
+name: 🚀 Simple CI Pipeline
 
 on:
   push:
@@ -7,25 +7,11 @@ on:
     branches: [ main, develop ]
 
 jobs:
-  # 🧪 Test Job
+  # 🧪 Simple Test Job
   test:
     name: 🧪 Run Tests
     runs-on: ubuntu-latest
     
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: mini_admin_panel_test
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-
     steps:
       - name: 📥 Checkout Code
         uses: actions/checkout@v4
@@ -38,104 +24,12 @@ jobs:
 
       - name: 📦 Install Dependencies
         run: npm ci
-
-      - name: 🔧 Setup Test Database
-        run: |
-          # Ensure clean test database
-          psql -U postgres -h localhost -c "DROP DATABASE IF EXISTS mini_admin_panel_test;" || true
-          psql -U postgres -h localhost -c "CREATE DATABASE mini_admin_panel_test;"
-        env:
-          PGPASSWORD: postgres
 
       - name: 🧪 Run Tests
         run: npm test
-        env:
-          NODE_ENV: test
-          DB_HOST: localhost
-          DB_PORT: 5432
-          DB_NAME: mini_admin_panel_test
-          DB_USER: postgres
-          DB_PASSWORD: postgres
-          DB_SSL: false
-
-      - name: 📊 Test Coverage
-        run: npm run test:coverage || echo "Coverage not configured"
-
-  # 🔍 Code Quality Job
-  quality:
-    name: 🔍 Code Quality
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: 📥 Checkout Code
-        uses: actions/checkout@v4
-
-      - name: 📦 Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
-
-      - name: 📦 Install Dependencies
-        run: npm ci
 
       - name: 🎨 Check Code Formatting
-        run: npx prettier --check "src/**/*.js" "tests/**/*.js"
+        run: npm run format:check
 
       - name: 🔍 Lint Code
-        run: npx eslint "src/**/*.js" "tests/**/*.js" || echo "ESLint not configured"
-
-  # 🚀 Build Job
-  build:
-    name: 🚀 Build Application
-    runs-on: ubuntu-latest
-    needs: [test, quality]
-    
-    steps:
-      - name: 📥 Checkout Code
-        uses: actions/checkout@v4
-
-      - name: 📦 Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
-
-      - name: 📦 Install Dependencies
-        run: npm ci
-
-      - name: 🏗️ Build Application
-        run: npm run build || echo "Build script not configured"
-
-      - name: 📦 Package Application
-        run: |
-          tar -czf mini-admin-panel-backend.tar.gz \
-            src/ package.json package-lock.json \
-            README.md .env.example
-
-      - name: 📤 Upload Build Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: mini-admin-panel-backend
-          path: mini-admin-panel-backend.tar.gz
-
-  # 🚀 Deploy Job (Optional)
-  deploy:
-    name: 🚀 Deploy to Production
-    runs-on: ubuntu-latest
-    needs: [build]
-    if: github.ref == 'refs/heads/main'
-    
-    steps:
-      - name: 📥 Checkout Code
-        uses: actions/checkout@v4
-
-      - name: 📥 Download Build Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: mini-admin-panel-backend
-
-      - name: 🚀 Deploy to Production
-        run: echo "Deploy to your production environment"
-        # Add your deployment commands here
-        # Example: rsync, docker, cloud deployment, etc.
+        run: npm run lint

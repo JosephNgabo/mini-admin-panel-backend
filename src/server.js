@@ -10,18 +10,17 @@ const startServer = async () => {
     await databaseService.connect();
     logger.info('Database connection established successfully');
     const server = app.listen(config.server.port, () => {
-      logger.info(`Server started successfully`, {
+      logger.info('Server started successfully', {
         port: config.server.port,
         environment: config.server.env,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
-      
     });
 
     // Graceful shutdown handling
-    const gracefulShutdown = (signal) => {
+    const gracefulShutdown = signal => {
       logger.info(`Received ${signal}. Starting graceful shutdown...`);
-      
+
       server.close(() => {
         logger.info('Server closed successfully');
         process.exit(0);
@@ -38,7 +37,7 @@ const startServer = async () => {
     process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
     // Handle uncaught exceptions
-    process.on('uncaughtException', (err) => {
+    process.on('uncaughtException', err => {
       logger.error('Uncaught Exception:', err);
       process.exit(1);
     });
@@ -47,7 +46,6 @@ const startServer = async () => {
       logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
       process.exit(1);
     });
-
   } catch (error) {
     logger.error('Failed to start server:', error);
     process.exit(1);

@@ -18,9 +18,7 @@ describe('Mini Admin Panel Backend', () => {
   });
   describe('Health Check', () => {
     it('should return 200 and server status', async () => {
-      const response = await request(app)
-        .get('/health')
-        .expect(200);
+      const response = await request(app).get('/health').expect(200);
 
       expect(response.body).toHaveProperty('status', 'OK');
       expect(response.body).toHaveProperty('timestamp');
@@ -30,9 +28,7 @@ describe('Mini Admin Panel Backend', () => {
     });
 
     it('should return database health status', async () => {
-      const response = await request(app)
-        .get('/health/database')
-        .expect(200);
+      const response = await request(app).get('/health/database').expect(200);
 
       expect(response.body).toHaveProperty('status', 'OK');
       expect(response.body).toHaveProperty('database');
@@ -41,9 +37,7 @@ describe('Mini Admin Panel Backend', () => {
     });
 
     it('should return full system health', async () => {
-      const response = await request(app)
-        .get('/health/full')
-        .expect(200);
+      const response = await request(app).get('/health/full').expect(200);
 
       expect(response.body).toHaveProperty('status');
       expect(response.body).toHaveProperty('systems');
@@ -54,9 +48,7 @@ describe('Mini Admin Panel Backend', () => {
 
   describe('Root Endpoint', () => {
     it('should return API information', async () => {
-      const response = await request(app)
-        .get('/')
-        .expect(200);
+      const response = await request(app).get('/').expect(200);
 
       expect(response.body).toHaveProperty('message');
       expect(response.body).toHaveProperty('version');
@@ -79,9 +71,7 @@ describe('Mini Admin Panel Backend', () => {
 
   describe('API Documentation', () => {
     it('should serve Swagger UI', async () => {
-      await request(app)
-        .get('/api-docs/')
-        .expect(200);
+      await request(app).get('/api-docs/').expect(200);
     });
   });
 });

@@ -7,7 +7,7 @@ const swaggerDocument = require('../docs/swagger.json');
 
 const config = require('./config');
 const logger = require('./utils/logger');
-const databaseService = require('./services/database');
+// const databaseService = require('./services/database');
 
 // Import routes
 const healthRoutes = require('./routes/health');
@@ -31,10 +31,10 @@ const limiter = rateLimit({
   max: config.security.rateLimit.maxRequests,
   message: {
     error: 'Too many requests from this IP, please try again later.',
-    retryAfter: Math.ceil(config.security.rateLimit.windowMs / 1000)
+    retryAfter: Math.ceil(config.security.rateLimit.windowMs / 1000),
   },
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
 });
 app.use(limiter);
 
@@ -47,7 +47,7 @@ app.use((req, res, next) => {
   logger.info(`${req.method} ${req.path}`, {
     ip: req.ip,
     userAgent: req.get('User-Agent'),
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   });
   next();
 });
@@ -65,7 +65,7 @@ app.get('/', (req, res) => {
     version: '1.0.0',
     documentation: '/api-docs',
     health: '/health',
-    environment: config.server.env
+    environment: config.server.env,
   });
 });
 
@@ -74,27 +74,26 @@ app.use('*', (req, res) => {
   res.status(404).json({
     error: 'Endpoint not found',
     message: 'The requested endpoint does not exist',
-    availableEndpoints: [
-      'GET /health',
-      'GET /api-docs',
-      'GET /'
-    ]
+    availableEndpoints: ['GET /health', 'GET /api-docs', 'GET /'],
   });
 });
 
 // Global Error Handler
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
   logger.error('Unhandled error:', {
     error: err.message,
     stack: err.stack,
     url: req.url,
     method: req.method,
-    ip: req.ip
+    ip: req.ip,
   });
 
   res.status(err.status || 500).json({
-    error: config.server.env === 'production' ? 'Internal Server Error' : err.message,
-    ...(config.server.env !== 'production' && { stack: err.stack })
+    error:
+      config.server.env === 'production'
+        ? 'Internal Server Error'
+        : err.message,
+    ...(config.server.env !== 'production' && { stack: err.stack }),
   });
 });
 

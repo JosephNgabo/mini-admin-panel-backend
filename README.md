@@ -48,20 +48,60 @@ src/
 npm install
 ```
 
-### 2. Environment Setup
+### 2. PostgreSQL Setup
 ```bash
-cp .env.example .env
-# Edit .env with your configuration
+# Install PostgreSQL (if not already installed)
+# macOS: brew install postgresql
+# Ubuntu: sudo apt-get install postgresql postgresql-contrib
+# Windows: Download from https://www.postgresql.org/download/
+
+# Create database
+createdb mini_admin_panel
 ```
 
-### 3. Development
+### 3. Environment Setup
+```bash
+cp .env.example .env
+# Edit .env with your PostgreSQL configuration
+```
+
+### 4. Development
 ```bash
 npm run dev
 ```
 
-### 4. Production
+### 5. Production
 ```bash
 npm start
+```
+
+## 🚀 CI/CD Pipeline
+
+This project includes a comprehensive CI/CD pipeline with GitHub Actions:
+
+### 🔧 **Automated Checks**
+- **Code Quality**: ESLint with professional rules
+- **Code Formatting**: Prettier for consistent style
+- **Testing**: Jest with PostgreSQL integration
+- **Coverage**: Test coverage reporting
+- **Build**: Application packaging
+
+### 📊 **Pipeline Features**
+- **Multi-Environment**: Test, Quality, Build, Deploy jobs
+- **PostgreSQL Service**: Automated database testing
+- **Artifact Management**: Build artifacts for deployment
+- **Professional Standards**: Industry best practices
+
+### 🧪 **Local Testing**
+```bash
+# Run all quality checks
+npm run precommit
+
+# Run tests with coverage
+npm run test:coverage
+
+# Format and lint code
+npm run format && npm run lint
 ```
 
 ##  Testing

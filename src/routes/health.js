@@ -27,14 +27,14 @@ router.get('/', async (req, res) => {
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
       environment: process.env.NODE_ENV || 'development',
-      version: '1.0.0'
+      version: '1.0.0',
     });
   } catch (error) {
     logger.error('Health check failed:', error);
     res.status(500).json({
       status: 'ERROR',
       message: 'Health check failed',
-      error: error.message
+      error: error.message,
     });
   }
 });
@@ -56,18 +56,18 @@ router.get('/database', async (req, res) => {
   try {
     // Test database connection
     await databaseService.testConnection();
-    
+
     // Get database statistics
     const stats = await databaseService.getStats();
-    
+
     res.status(200).json({
       status: 'OK',
       database: {
         connected: true,
         path: stats.path,
-        userCount: stats.userCount
+        userCount: stats.userCount,
       },
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   } catch (error) {
     logger.error('Database health check failed:', error);
@@ -75,9 +75,9 @@ router.get('/database', async (req, res) => {
       status: 'ERROR',
       database: {
         connected: false,
-        error: error.message
+        error: error.message,
       },
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 });
@@ -103,7 +103,7 @@ router.get('/full', async (req, res) => {
       uptime: process.uptime(),
       environment: process.env.NODE_ENV || 'development',
       version: '1.0.0',
-      systems: {}
+      systems: {},
     };
 
     // Check database
@@ -113,13 +113,13 @@ router.get('/full', async (req, res) => {
       health.systems.database = {
         status: 'OK',
         connected: true,
-        userCount: stats.userCount
+        userCount: stats.userCount,
       };
     } catch (dbError) {
       health.systems.database = {
         status: 'ERROR',
         connected: false,
-        error: dbError.message
+        error: dbError.message,
       };
       health.status = 'DEGRADED';
     }
@@ -129,19 +129,18 @@ router.get('/full', async (req, res) => {
     health.systems.memory = {
       status: 'OK',
       used: Math.round(memUsage.heapUsed / 1024 / 1024) + ' MB',
-      total: Math.round(memUsage.heapTotal / 1024 / 1024) + ' MB'
+      total: Math.round(memUsage.heapTotal / 1024 / 1024) + ' MB',
     };
 
     const statusCode = health.status === 'OK' ? 200 : 500;
     res.status(statusCode).json(health);
-
   } catch (error) {
     logger.error('Full health check failed:', error);
     res.status(500).json({
       status: 'ERROR',
       message: 'Health check failed',
       error: error.message,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 });

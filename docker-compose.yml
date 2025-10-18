@@ -1,0 +1,44 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: ./mini-admin-panel-backend
+      dockerfile: Dockerfile
+    image: mini-admin-backend:latest
+    container_name: mini-admin-backend
+    ports:
+      - "3026:3026"
+    env_file:
+      - ./mini-admin-panel-backend/.env
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./mini-admin-panel-frontend
+      dockerfile: Dockerfile
+    image: mini-admin-frontend:latest
+    container_name: mini-admin-frontend
+    ports:
+      - "3000:80"
+    environment:
+      - VITE_API_URL=http://backend:3026
+    depends_on:
+      - backend
+
+  db:
+    image: postgres:15-alpine
+    container_name: mini-admin-db
+    restart: always
+    environment:
+      POSTGRES_USER: qt_admin_db_user
+      POSTGRES_PASSWORD: PkitTbxVlJIlHdS5dtvXMVo4GCBNddci
+      POSTGRES_DB: qt_admin_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:

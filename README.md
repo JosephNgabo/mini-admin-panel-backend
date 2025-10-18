@@ -1,7 +1,8 @@
 ### Mini Admin Panel Backend
 
-Backend API for Mini Admin Panel, built with Node.js/Express and PostgreSQL.
-Provides user management, analytics, cryptography, and protobuf export, fully containerized with Docker.
+##### Backend API for Mini Admin Panel, built with Node.js/Express and PostgreSQL.
+##### Provides user management, analytics, cryptography, and protobuf export, fully containerized with Docker.
+##### This mini admin panel backend also includes GitHub Actions for automated builds and CI/CD workflows.
 
 ##  Features
 ```
@@ -68,7 +69,7 @@ cp .env.example .env
 sample .ENV
 ```
 # Server Configuration
-PORT=3001
+PORT=3036
 NODE_ENV=development
 
 # PostgreSQL Database Configuration
@@ -83,7 +84,7 @@ DB_PASSWORD=your_password_here
 ```bash
 npm start
 ```
-### 5. Build & run using Docker Compose (if necessary)
+### 5. Build & run using Docker Compose
 ```bash
 docker-compose up --build
 ```
@@ -92,6 +93,17 @@ This will start:
 Backend API → http://localhost:3026
 PostgreSQL Database → localhost:5432
 ```
+
+
+## Notes / Assumptions
+
+- PostgreSQL is used as the database. Docker-compose sets it up automatically for local development.
+- The backend expects environment variables defined in `.env` (e.g., DB connection, secret keys).
+- Crypto signature verification is performed in the frontend; invalid users are not displayed.
+- Protocol Buffers export is mandatory and implemented at `/api/users/export`.
+- On the frontend, All decoded users from the Protocal buffer export as shown in the table after clicking button of `Decode & Display Protocol Buffer`
+  from the last section on pannel of PROTOCAL BUFFER
+- GitHub Actions are included for CI checks (linting, type-check, and tests).
 
 
 

@@ -103,6 +103,7 @@ PostgreSQL Database → localhost:5432
 - Protocol Buffers export is mandatory and implemented at `/api/users/export`.
 - On the frontend, All decoded users from the Protocal buffer export as shown in the table after clicking button of `Decode & Display Protocol Buffer`
   from the last section on pannel of PROTOCAL BUFFER
+- A `docker-compose.yml` file is included in the backend root folder to easily spin up the backend, frontend, and PostgreSQL database together.
 - GitHub Actions are included for CI checks (linting, type-check, and tests).
 
 

@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package user;
+
+// User message definition
+// This defines the structure for serializing user data
+message User {
+  // Unique identifier for the user
+  string id = 1;
+  
+  // User's email address
+  string email = 2;
+  
+  // User's role (admin, user, moderator)
+  string role = 3;
+  
+  // User's status (active, inactive)
+  string status = 4;
+  
+  // Timestamp when user was created
+  string created_at = 5;
+  
+  // SHA-384 hash of the email for data integrity
+  string email_hash = 6;
+  
+  // RSA digital signature for authentication
+  string signature = 7;
+}
+
+// Collection of users for export
+message UserCollection {
+  // List of users
+  repeated User users = 1;
+  
+  // Total count of users
+  int32 total_count = 2;
+  
+  // Export timestamp
+  string exported_at = 3;
+  
+  // Export metadata
+  string algorithm = 4;        // RSA-2048
+  string hash_algorithm = 5;   // SHA-384
+}

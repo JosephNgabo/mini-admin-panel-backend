@@ -17,28 +17,50 @@ class DatabaseService {
    * Creates PostgreSQL connection pool and tables if they don't exist
    */
   async connect() {
-    try {
-      // Create PostgreSQL connection pool
-      this.pool = new Pool(config.database);
+    const maxRetries = 3;
+    let retryCount = 0;
 
-      // Test the connection
-      const client = await this.pool.connect();
-      logger.info('Database connected successfully', {
-        host: config.database.host,
-        port: config.database.port,
-        database: config.database.database,
-        timestamp: new Date().toISOString(),
-      });
+    while (retryCount < maxRetries) {
+      try {
+        logger.info(
+          `Attempting database connection (attempt ${retryCount + 1}/${maxRetries})...`
+        );
 
-      // Initialize tables
-      await this.initializeTables(client);
-      client.release();
+        // Create PostgreSQL connection pool
+        this.pool = new Pool(config.database);
 
-      this.isConnected = true;
-      return this.pool;
-    } catch (error) {
-      logger.error('Database connection error:', error);
-      throw error;
+        // Test the connection with a longer timeout
+        const client = await this.pool.connect();
+        logger.info('Database connected successfully', {
+          host: config.database.host,
+          port: config.database.port,
+          database: config.database.database,
+          timestamp: new Date().toISOString(),
+        });
+
+        // Initialize tables
+        await this.initializeTables(client);
+        client.release();
+
+        this.isConnected = true;
+        return this.pool;
+      } catch (error) {
+        retryCount++;
+        logger.error(
+          `Database connection attempt ${retryCount} failed:`,
+          error
+        );
+
+        if (retryCount >= maxRetries) {
+          logger.error('All database connection attempts failed');
+          throw error;
+        }
+
+        // Wait before retrying (exponential backoff)
+        const waitTime = Math.pow(2, retryCount) * 1000; // 2s, 4s, 8s
+        logger.info(`Waiting ${waitTime}ms before retry...`);
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+      }
     }
   }
 

@@ -60,13 +60,7 @@ class UserController {
    */
   async getUsers(req, res) {
     try {
-      const {
-        page = 1,
-        limit = 10,
-        role,
-        status,
-        search,
-      } = req.query;
+      const { page = 1, limit = 10, role, status, search } = req.query;
 
       // Validate pagination parameters
       const pageNum = parseInt(page);
@@ -353,7 +347,6 @@ class UserController {
 
       // Send binary data
       res.send(result.data);
-
     } catch (error) {
       logger.error('Failed to export users:', error);
       res.status(500).json({

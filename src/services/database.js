@@ -22,8 +22,10 @@ class DatabaseService {
 
     while (retryCount < maxRetries) {
       try {
-        logger.info(`Attempting database connection (attempt ${retryCount + 1}/${maxRetries})...`);
-        
+        logger.info(
+          `Attempting database connection (attempt ${retryCount + 1}/${maxRetries})...`
+        );
+
         // Create PostgreSQL connection pool
         this.pool = new Pool(config.database);
 
@@ -44,13 +46,16 @@ class DatabaseService {
         return this.pool;
       } catch (error) {
         retryCount++;
-        logger.error(`Database connection attempt ${retryCount} failed:`, error);
-        
+        logger.error(
+          `Database connection attempt ${retryCount} failed:`,
+          error
+        );
+
         if (retryCount >= maxRetries) {
           logger.error('All database connection attempts failed');
           throw error;
         }
-        
+
         // Wait before retrying (exponential backoff)
         const waitTime = Math.pow(2, retryCount) * 1000; // 2s, 4s, 8s
         logger.info(`Waiting ${waitTime}ms before retry...`);

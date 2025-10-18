@@ -5,7 +5,7 @@ const logger = require('./logger');
 /**
  * Protocol Buffer Utilities
  * Handles serialization and deserialization of user data
- * 
+ *
  * Interview Points:
  * - Protocol Buffers: Efficient binary serialization format
  * - Schema Definition: .proto files define data structure
@@ -18,7 +18,7 @@ class ProtobufService {
     this.UserMessage = null;
     this.UserCollectionMessage = null;
     this.isInitialized = false;
-    
+
     // Initialize protobuf schema asynchronously
     this.initializeProtobuf().catch(error => {
       logger.error('Failed to initialize protobuf in constructor:', error);
@@ -46,22 +46,21 @@ class ProtobufService {
   async initializeProtobuf() {
     try {
       const protoPath = path.join(__dirname, '../proto/user.proto');
-      
+
       // Load and compile the .proto file
       const root = await protobuf.load(protoPath);
-      
+
       // Get message types
       this.UserMessage = root.lookupType('user.User');
       this.UserCollectionMessage = root.lookupType('user.UserCollection');
-      
+
       this.isInitialized = true;
-      
+
       logger.info('Protocol Buffer schema loaded successfully', {
         userMessage: this.UserMessage.name,
         userCollectionMessage: this.UserCollectionMessage.name,
-        protoPath: protoPath
+        protoPath: protoPath,
       });
-      
     } catch (error) {
       logger.error('Failed to initialize Protocol Buffer schema:', error);
       throw error;
@@ -86,7 +85,7 @@ class ProtobufService {
   async serializeUser(user) {
     try {
       await this.ensureInitialized();
-      
+
       if (!this.isInitialized) {
         throw new Error('Protocol Buffer not initialized');
       }
@@ -103,9 +102,11 @@ class ProtobufService {
         role: user.role || '',
         status: user.status || '',
         // ProtobufJS expects camelCase field names when creating messages
-        createdAt: ProtobufService.toIsoString(user.created_at || user.createdAt),
+        createdAt: ProtobufService.toIsoString(
+          user.created_at || user.createdAt
+        ),
         emailHash: user.email_hash || user.emailHash || '',
-        signature: user.signature || ''
+        signature: user.signature || '',
       };
 
       // Verify message before encoding
@@ -121,11 +122,10 @@ class ProtobufService {
       logger.info('User serialized successfully', {
         userId: user.id,
         bufferSize: buffer.length,
-        email: user.email
+        email: user.email,
       });
 
       return buffer;
-
     } catch (error) {
       logger.error('Failed to serialize user:', error);
       throw error;
@@ -140,7 +140,7 @@ class ProtobufService {
   async serializeUserCollection(users) {
     try {
       await this.ensureInitialized();
-      
+
       if (!this.isInitialized) {
         throw new Error('Protocol Buffer not initialized');
       }
@@ -152,15 +152,17 @@ class ProtobufService {
 
       // Create user collection message
       const usersMapped = users.map(user => ({
-          id: user.id || '',
-          email: user.email || '',
-          role: user.role || '',
-          status: user.status || '',
+        id: user.id || '',
+        email: user.email || '',
+        role: user.role || '',
+        status: user.status || '',
         // ProtobufJS expects camelCase property names on create
-        createdAt: ProtobufService.toIsoString(user.created_at || user.createdAt),
+        createdAt: ProtobufService.toIsoString(
+          user.created_at || user.createdAt
+        ),
         emailHash: user.email_hash || user.emailHash || '',
-          signature: user.signature || ''
-        }))
+        signature: user.signature || '',
+      }));
 
       // Debug: log mapping outcome for hashes
       try {
@@ -168,9 +170,11 @@ class ProtobufService {
           logger.info('Protobuf mapping - user hash field', {
             userId: u.id,
             hasEmailHash: !!u.email_hash,
-            emailHashPreview: u.email_hash ? String(u.email_hash).slice(0, 12) : ''
-          })
-        })
+            emailHashPreview: u.email_hash
+              ? String(u.email_hash).slice(0, 12)
+              : '',
+          });
+        });
       } catch (e) {
         // no-op
       }
@@ -180,13 +184,15 @@ class ProtobufService {
         total_count: users.length,
         exported_at: new Date().toISOString(),
         algorithm: 'RSA-2048',
-        hash_algorithm: 'SHA-384'
+        hash_algorithm: 'SHA-384',
       };
 
       // Verify message before encoding
       const errMsg = this.UserCollectionMessage.verify(userCollectionMessage);
       if (errMsg) {
-        throw new Error(`User collection message verification failed: ${errMsg}`);
+        throw new Error(
+          `User collection message verification failed: ${errMsg}`
+        );
       }
 
       // Create message and encode
@@ -196,11 +202,10 @@ class ProtobufService {
       logger.info('User collection serialized successfully', {
         userCount: users.length,
         bufferSize: buffer.length,
-        exportedAt: userCollectionMessage.exported_at
+        exportedAt: userCollectionMessage.exported_at,
       });
 
       return buffer;
-
     } catch (error) {
       logger.error('Failed to serialize user collection:', error);
       throw error;
@@ -230,17 +235,16 @@ class ProtobufService {
         bytes: String,
         defaults: true,
         arrays: true,
-        objects: true
+        objects: true,
       });
 
       logger.info('User deserialized successfully', {
         userId: user.id,
         email: user.email,
-        bufferSize: buffer.length
+        bufferSize: buffer.length,
       });
 
       return user;
-
     } catch (error) {
       logger.error('Failed to deserialize user:', error);
       throw error;
@@ -270,18 +274,17 @@ class ProtobufService {
         bytes: String,
         defaults: true,
         arrays: true,
-        objects: true
+        objects: true,
       });
 
       logger.info('User collection deserialized successfully', {
         userCount: userCollection.users.length,
         totalCount: userCollection.total_count,
         exportedAt: userCollection.exported_at,
-        bufferSize: buffer.length
+        bufferSize: buffer.length,
       });
 
       return userCollection;
-
     } catch (error) {
       logger.error('Failed to deserialize user collection:', error);
       throw error;
@@ -296,9 +299,11 @@ class ProtobufService {
     return {
       isInitialized: this.isInitialized,
       userMessage: this.UserMessage ? this.UserMessage.name : null,
-      userCollectionMessage: this.UserCollectionMessage ? this.UserCollectionMessage.name : null,
+      userCollectionMessage: this.UserCollectionMessage
+        ? this.UserCollectionMessage.name
+        : null,
       supportedFormats: ['binary', 'json'],
-      version: protobuf.util.Long ? 'protobufjs' : 'unknown'
+      version: protobuf.util.Long ? 'protobufjs' : 'unknown',
     };
   }
 
@@ -320,37 +325,39 @@ class ProtobufService {
         status: 'active',
         created_at: new Date().toISOString(),
         email_hash: 'test-hash-123',
-        signature: 'test-signature-123'
+        signature: 'test-signature-123',
       };
 
       // Test serialization
       const serialized = this.serializeUser(testUser);
-      
+
       // Test deserialization
       const deserialized = this.deserializeUser(serialized);
 
       // Verify data integrity
-      const isDataIntact = (
+      const isDataIntact =
         deserialized.id === testUser.id &&
         deserialized.email === testUser.email &&
         deserialized.role === testUser.role &&
-        deserialized.status === testUser.status
-      );
+        deserialized.status === testUser.status;
 
       logger.info('Protocol Buffer test completed', {
         success: isDataIntact,
         originalSize: JSON.stringify(testUser).length,
         serializedSize: serialized.length,
-        compressionRatio: (JSON.stringify(testUser).length / serialized.length).toFixed(2)
+        compressionRatio: (
+          JSON.stringify(testUser).length / serialized.length
+        ).toFixed(2),
       });
 
       return {
         success: isDataIntact,
         originalSize: JSON.stringify(testUser).length,
         serializedSize: serialized.length,
-        compressionRatio: (JSON.stringify(testUser).length / serialized.length).toFixed(2)
+        compressionRatio: (
+          JSON.stringify(testUser).length / serialized.length
+        ).toFixed(2),
       };
-
     } catch (error) {
       logger.error('Protocol Buffer test failed:', error);
       throw error;

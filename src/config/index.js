@@ -24,10 +24,10 @@ const config = {
       process.env.DB_SSL === 'true'
         ? { rejectUnauthorized: false }
         : { rejectUnauthorized: false },
-    max: 20, // Maximum number of clients in the pool
-    idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-    connectionTimeoutMillis: 30000, // Return an error after 30 seconds if connection could not be established
-    acquireTimeoutMillis: 30000, // Return an error after 30 seconds if a connection could not be acquired
+    max: 20, 
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 30000, 
+    acquireTimeoutMillis: 30000, 
   },
 
   // Security Configuration

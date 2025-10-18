@@ -81,12 +81,12 @@ class UserService {
       }
 
       // Process email cryptographically (SHA-384 hash + RSA signature)
-      logger.info('Processing user email with cryptographic features', { 
-        email: userData.email 
+      logger.info('Processing user email with cryptographic features', {
+        email: userData.email,
       });
-      
+
       const cryptoData = cryptoService.processUserEmail(userData.email);
-      
+
       // Set user data with cryptographic information
       const userToCreate = {
         email: userData.email,
@@ -127,13 +127,7 @@ class UserService {
    */
   async getUsers(options = {}) {
     try {
-      const {
-        page = 1,
-        limit = 10,
-        role,
-        status,
-        search,
-      } = options;
+      const { page = 1, limit = 10, role, status, search } = options;
 
       // Calculate offset
       const offset = (page - 1) * limit;
@@ -148,7 +142,7 @@ class UserService {
 
       // Get users
       const users = await User.findAll(queryOptions);
-      
+
       // Get total count
       const totalCount = await User.count({ role, status });
 
@@ -201,7 +195,7 @@ class UserService {
       }
 
       const user = await User.findById(userId);
-      
+
       if (!user) {
         return {
           success: false,
@@ -264,7 +258,7 @@ class UserService {
         if (emailExists) {
           throw new Error('User with this email already exists');
         }
-        
+
         // If email is being updated, we need to re-hash and re-sign
         const cryptoData = cryptoService.processUserEmail(updateData.email);
         updateData.emailHash = cryptoData.emailHash;
@@ -430,27 +424,28 @@ class UserService {
 
       // Get all users from database
       const users = await User.findAll();
-      
+
       if (!users || users.length === 0) {
         logger.info('No users found for export');
         return {
           success: true,
           data: Buffer.alloc(0), // Empty buffer
           message: 'No users to export',
-          userCount: 0
+          userCount: 0,
         };
       }
 
       // Import protobuf service
       const protobufService = require('../utils/protobuf');
-      
+
       // Serialize users to Protocol Buffer format
-      const serializedData = await protobufService.serializeUserCollection(users);
+      const serializedData =
+        await protobufService.serializeUserCollection(users);
 
       logger.info('Users exported successfully in Protocol Buffer format', {
         userCount: users.length,
         serializedSize: serializedData.length,
-        format: 'Protocol Buffer'
+        format: 'Protocol Buffer',
       });
 
       return {
@@ -459,9 +454,8 @@ class UserService {
         message: 'Users exported successfully',
         userCount: users.length,
         format: 'Protocol Buffer',
-        size: serializedData.length
+        size: serializedData.length,
       };
-
     } catch (error) {
       logger.error('Failed to export users:', error);
       return {

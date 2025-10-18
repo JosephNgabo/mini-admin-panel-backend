@@ -1,7 +1,6 @@
 const databaseService = require('../services/database');
 const logger = require('../utils/logger');
 
-
 class User {
   constructor() {
     this.tableName = 'users';
@@ -25,7 +24,7 @@ class User {
         VALUES ($1, $2, $3, $4, $5)
         RETURNING id, email, role, status, created_at, email_hash, signature
       `;
-      
+
       const values = [
         userData.email,
         userData.role || 'user',
@@ -66,7 +65,7 @@ class User {
         SELECT id, email, role, status, created_at, email_hash, signature
         FROM users
       `;
-      
+
       const conditions = [];
       const values = [];
       let paramCount = 0;
@@ -106,7 +105,7 @@ class User {
       }
 
       const result = await pool.query(query, values);
-      
+
       logger.info('Users retrieved successfully', {
         count: result.rows.length,
         filters: options,
@@ -127,7 +126,8 @@ class User {
   async findById(userId) {
     try {
       // Validate UUID format
-      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+      const uuidRegex =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
       if (!uuidRegex.test(userId)) {
         logger.info('Invalid UUID format', { userId });
         return null;
@@ -141,7 +141,7 @@ class User {
       `;
 
       const result = await pool.query(query, [userId]);
-      
+
       if (result.rows.length === 0) {
         logger.info('User not found', { userId });
         return null;
@@ -174,7 +174,7 @@ class User {
       `;
 
       const result = await pool.query(query, [email]);
-      
+
       if (result.rows.length === 0) {
         logger.info('User not found by email', { email });
         return null;
@@ -201,14 +201,15 @@ class User {
   async update(userId, updateData) {
     try {
       // Validate UUID format
-      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+      const uuidRegex =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
       if (!uuidRegex.test(userId)) {
         logger.info('Invalid UUID format', { userId });
         return null;
       }
 
       const pool = databaseService.getDatabase();
-      
+
       // Build dynamic query
       const fields = [];
       const values = [];
@@ -259,7 +260,7 @@ class User {
       `;
 
       const result = await pool.query(query, values);
-      
+
       if (result.rows.length === 0) {
         logger.info('User not found for update', { userId });
         return null;
@@ -282,12 +283,13 @@ class User {
   /**
    * Delete user
    * @param {string} userId - User ID
-   * @returns {Promise<boolean>} True if deleted, false if not found
+   * @returns {Promise<boolean>} 
    */
   async delete(userId) {
     try {
       // Validate UUID format
-      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+      const uuidRegex =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
       if (!uuidRegex.test(userId)) {
         logger.info('Invalid UUID format', { userId });
         return false;
@@ -301,7 +303,7 @@ class User {
       `;
 
       const result = await pool.query(query, [userId]);
-      
+
       if (result.rows.length === 0) {
         logger.info('User not found for deletion', { userId });
         return false;
@@ -329,7 +331,7 @@ class User {
     try {
       const pool = databaseService.getDatabase();
       let query = 'SELECT COUNT(*) as count FROM users';
-      
+
       const conditions = [];
       const values = [];
       let paramCount = 0;
@@ -382,7 +384,7 @@ class User {
       `;
 
       const result = await pool.query(query);
-      
+
       logger.info('Users by day retrieved', {
         days,
         records: result.rows.length,

@@ -11,6 +11,7 @@ const logger = require('./utils/logger');
 
 // Import routes
 const healthRoutes = require('./routes/health');
+const userRoutes = require('./routes/users');
 
 const app = express();
 
@@ -57,6 +58,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // API Routes
 app.use('/health', healthRoutes);
+app.use('/api/users', userRoutes);
 
 // Root Route
 app.get('/', (req, res) => {
@@ -74,7 +76,19 @@ app.use('*', (req, res) => {
   res.status(404).json({
     error: 'Endpoint not found',
     message: 'The requested endpoint does not exist',
-    availableEndpoints: ['GET /health', 'GET /api-docs', 'GET /'],
+    availableEndpoints: [
+      'GET /health',
+      'GET /api-docs',
+      'GET /',
+      'POST /api/users',
+      'GET /api/users',
+      'GET /api/users/:id',
+      'PUT /api/users/:id',
+      'DELETE /api/users/:id',
+      'GET /api/users/stats',
+      'GET /api/users/chart',
+      'GET /api/users/export',
+    ],
   });
 });
 

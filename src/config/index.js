@@ -26,7 +26,8 @@ const config = {
         : { rejectUnauthorized: false },
     max: 20, // Maximum number of clients in the pool
     idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-    connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
+    connectionTimeoutMillis: 30000, // Return an error after 30 seconds if connection could not be established
+    acquireTimeoutMillis: 30000, // Return an error after 30 seconds if a connection could not be acquired
   },
 
   // Security Configuration
@@ -34,7 +35,7 @@ const config = {
     jwtSecret: process.env.JWT_SECRET || 'your-super-secret-jwt-key-here',
     rateLimit: {
       windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, // 15 minutes
-      maxRequests: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100,
+      maxRequests: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 1000, // Increased for development
     },
   },
 

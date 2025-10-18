@@ -7,13 +7,16 @@ Provides user management, analytics, cryptography, and protobuf export, fully co
 ```
 - Health Check: GET /health
 - API Documentation: GET /api-docs
+
 User Management (CRUD):
+
 - POST /api/users → Create user
 - GET /api/users → List users
 - GET /api/users/:id → Get user by ID
 - PUT /api/users/:id → Update user
 - DELETE /api/users/:id → Delete user
 Analytics & Stats:
+
 - GET /api/users/stats → User statistics
 - GET /api/users/chart → User creation chart
 - Protobuf Export: GET /api/users/export → Export users in protobuf format

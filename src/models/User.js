@@ -283,7 +283,7 @@ class User {
   /**
    * Delete user
    * @param {string} userId - User ID
-   * @returns {Promise<boolean>} 
+   * @returns {Promise<boolean>}
    */
   async delete(userId) {
     try {

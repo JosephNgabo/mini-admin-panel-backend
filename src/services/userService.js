@@ -127,7 +127,7 @@ class UserService {
    */
   async getUsers(options = {}) {
     try {
-      const { page = 1, limit = 10, role, status, search } = options;
+      const { page = 1, limit = 10, role, status } = options;
 
       // Calculate offset
       const offset = (page - 1) * limit;

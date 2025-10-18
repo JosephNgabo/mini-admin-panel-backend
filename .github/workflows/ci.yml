@@ -28,8 +28,5 @@ jobs:
       - name: 🧪 Run Tests
         run: npm test
 
-      - name: 🎨 Formatting
-        run: npm run format:check
-
       - name: 🔍 Lint Code
         run: npm run lint

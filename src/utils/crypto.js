@@ -21,7 +21,6 @@ class CryptoService {
     this.privateKeyPath = path.join(this.keyPath, 'private.pem');
     this.publicKeyPath = path.join(this.keyPath, 'public.pem');
 
-    // Initialize keys on startup
     this.initializeKeys();
   }
 

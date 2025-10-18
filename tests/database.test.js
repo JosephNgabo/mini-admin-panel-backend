@@ -1,5 +1,4 @@
-// tests/database.test.js
-const databaseService = require('../src/services/database');
+const db = require('../src/services/database');
 
 jest.mock('../src/services/database', () => ({
   connect: jest.fn().mockResolvedValue(true),
@@ -13,16 +12,13 @@ jest.mock('../src/services/database', () => ({
 
 describe('Database Service', () => {
   it('should connect and disconnect successfully', async () => {
-    const db = require('../src/services/database');
-
+    const connection = db.getDatabase(); // <-- get the mocked connection here
     await expect(db.connect()).resolves.toBe(true);
     await expect(db.disconnect()).resolves.toBe(true);
-    const connection = db.getDatabase();
-    await expect(connection.query()).resolves.toEqual([]);
+    await expect(connection.query()).resolves.toEqual([]); // now connection is defined
   });
 
   it('should test connection', async () => {
-    const db = require('../src/services/database');
     await expect(db.testConnection()).resolves.toEqual({ status: 'ok' });
   });
 });

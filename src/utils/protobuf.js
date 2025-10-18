@@ -34,10 +34,7 @@ class ProtobufService {
     try {
       const d = new Date(value);
       return isNaN(d.getTime()) ? '' : d.toISOString();
-    }
-    catch {
-    
-    }
+    } catch {}
   }
 
   /**
@@ -176,10 +173,7 @@ class ProtobufService {
               : '',
           });
         });
-      } catch  {
-       
-      }
-      
+      } catch {}
 
       const userCollectionMessage = {
         users: usersMapped,

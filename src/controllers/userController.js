@@ -30,7 +30,7 @@ class UserController {
         role,
         status,
         emailHash: '',
-        signature: '', 
+        signature: '',
       });
 
       if (!result.success) {

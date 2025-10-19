@@ -7,7 +7,6 @@ const logger = require('./logger');
  * Cryptographic Utilities
  * Implements SHA-384 hashing and RSA digital signing for user data
  *
- * Interview Points:
  * - SHA-384: More secure than SHA-256, 384-bit output
  * - RSA: Industry standard for digital signatures
  * - Key Management: Secure key generation and storage
@@ -74,7 +73,7 @@ class CryptoService {
     try {
       // Generate RSA keypair
       const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
-        modulusLength: 2048, // 2048-bit key (industry standard)
+        modulusLength: 2048, // 2048-bit key
         publicKeyEncoding: {
           type: 'spki',
           format: 'pem',
@@ -108,7 +107,6 @@ class CryptoService {
    * Hash email using SHA-384
    * SHA-384: More secure than SHA-256, produces 384-bit (48-byte) hash
    *
-   * Interview Points:
    * - SHA-384 is more secure than SHA-256
    * - Produces fixed-length output regardless of input size
    * - One-way function (cannot reverse the hash)
@@ -142,7 +140,6 @@ class CryptoService {
    * Create digital signature using RSA private key
    * Signs the email hash to prove authenticity
    *
-   * Interview Points:
    * - Digital signature proves data came from our server
    * - Uses RSA private key (only we have this)
    * - Anyone can verify with our public key
@@ -180,7 +177,6 @@ class CryptoService {
    * Verify digital signature using RSA public key
    * Used by frontend to verify data authenticity
    *
-   * Interview Points:
    * - Anyone can verify signature with public key
    * - Proves data hasn't been tampered with
    * - Proves data came from our server
@@ -228,7 +224,6 @@ class CryptoService {
    * Process user email: hash + sign
    * Complete cryptographic processing for user creation
    *
-   * Interview Points:
    * - Combines hashing and signing in one operation
    * - Returns both hash and signature
    * - Used during user creation

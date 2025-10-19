@@ -6,7 +6,6 @@ const logger = require('./logger');
  * Protocol Buffer Utilities
  * Handles serialization and deserialization of user data
  *
- * Interview Points:
  * - Protocol Buffers: Efficient binary serialization format
  * - Schema Definition: .proto files define data structure
  * - Cross-platform: Works with any programming language

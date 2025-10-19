@@ -29,8 +29,8 @@ class UserController {
         email,
         role,
         status,
-        emailHash: '', // Will be set by crypto service later
-        signature: '', // Will be set by crypto service later
+        emailHash: '',
+        signature: '',
       });
 
       if (!result.success) {
